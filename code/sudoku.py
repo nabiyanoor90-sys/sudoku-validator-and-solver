@@ -1,58 +1,126 @@
-#validator
+import tkinter as tk
+
+# ---------- VALIDATOR ----------
 def checkboard(board):
-#checking rows
- for row in board:
-    num=[x for x in row if x!="."]
-    if len(num)!=len(set(num)):
-        return False
-#checking columns
- for column in range(9):
-    num=[]
-    for row in range(9):
-        if board[row][column]!=".":
-            num.append(board[row][column])
-    if len(num)!=len(set(num)):
-                return False
-#checking each box
- for boxrow in range(0,9,3):
-    for boxcol in range(0,9,3):
-        num=[]
-        for i in range(3):
-            for j in range(3):
-                v=board[boxrow+i][boxcol+j]
-                if v!=".":
-                    num.append(v)
-        if len(num)!=len(set(num)):
+    for row in board:
+        nums = [x for x in row if x != "."]
+        if len(nums) != len(set(nums)):
             return False
- return True
-#solver
-def solver(board):
-    for row in range(9):
-        for column in range(9):
-            if board[row][column]==".":
-                for num in range(1,10):
-                 board[row][column]=str(num)
-                 if checkboard(board):
-                     if solver(board):
-                        return True
-                 board[row][column]="."
+
+    for col in range(9):
+        nums = []
+        for row in range(9):
+            if board[row][col] != ".":
+                nums.append(board[row][col])
+        if len(nums) != len(set(nums)):
+            return False
+
+    for br in range(0, 9, 3):
+        for bc in range(0, 9, 3):
+            nums = []
+            for i in range(3):
+                for j in range(3):
+                    val = board[br+i][bc+j]
+                    if val != ".":
+                        nums.append(val)
+            if len(nums) != len(set(nums)):
+                return False
+
+    return True
+
+
+# ---------- SOLVER ----------
+def solve_sudoku(board):
+    for r in range(9):
+        for c in range(9):
+            if board[r][c] == ".":
+                for num in range(1, 10):
+                    board[r][c] = str(num)
+
+                    if checkboard(board):
+                        if solve_sudoku(board):
+                            return True
+
+                    board[r][c] = "."
                 return False
     return True
-board = [
-    ["5","3",".",".","7",".",".",".","."],
-    ["6",".",".","1","9","5",".",".","."],
-    [".","9","8",".",".",".",".","6","."],
-    ["8",".",".",".","6",".",".",".","3"],
-    ["4",".",".","8",".","3",".",".","1"],
-    ["7",".",".",".","2",".",".",".","6"],
-    [".","6",".",".",".",".","2","8","."],
-    [".",".",".","4","1","9",".",".","5"],
-    [".",".",".",".","8",".",".","7","9"]
-]
-if checkboard(board):
-    print("BOARD IS VALID")
-else:
-    print("BOARD IS NOT VALID")
-result=solver(board)
-for row in board:
-    print(row)
+
+
+# ---------- GUI ----------
+root = tk.Tk()
+root.title("Sudoku Solver")
+
+cells = []
+
+# grid
+for i in range(9):
+    row = []
+    for j in range(9):
+        e = tk.Entry(root, width=3, font=("Arial", 18), justify='center')
+        e.grid(row=i, column=j, padx=2, pady=2)
+        row.append(e)
+    cells.append(row)
+
+
+# get board
+def get_board():
+    board = []
+    for i in range(9):
+        row = []
+        for j in range(9):
+            val = cells[i][j].get()
+            if val == "":
+                row.append(".")
+            else:
+                row.append(val)
+        board.append(row)
+    return board
+
+
+# display board
+def display(board):
+    for i in range(9):
+        for j in range(9):
+            cells[i][j].delete(0, tk.END)
+            cells[i][j].insert(0, board[i][j])
+
+
+# example board
+def load_example():
+    example = [
+        ["5","3",".",".","7",".",".",".","."],
+        ["6",".",".","1","9","5",".",".","."],
+        [".","9","8",".",".",".",".","6","."],
+        ["8",".",".",".","6",".",".",".","3"],
+        ["4",".",".","8",".","3",".",".","1"],
+        ["7",".",".",".","2",".",".",".","6"],
+        [".","6",".",".",".",".","2","8","."],
+        [".",".",".","4","1","9",".",".","5"],
+        [".",".",".",".","8",".",".","7","9"]
+    ]
+    display(example)
+
+
+# solve
+def solve():
+    board = get_board()
+
+    if solve_sudoku(board):
+        display(board)
+    else:
+        print("No solution")
+
+
+# clear board
+def clear():
+    for i in range(9):
+        for j in range(9):
+            cells[i][j].delete(0, tk.END)
+
+
+# buttons
+tk.Button(root, text="Load Example", command=load_example).grid(row=9, column=0, columnspan=3)
+tk.Button(root, text="Solve", command=solve).grid(row=9, column=3, columnspan=3)
+tk.Button(root, text="Clear", command=clear).grid(row=9, column=6, columnspan=3)
+
+root.mainloop()
