@@ -1,65 +1,68 @@
-# Sudoku Solver & Validator (Python)
+## Overview
 
-## Introduction
+This project presents a complete implementation of a Sudoku validation and solving system in Python, enhanced with an interactive graphical user interface built using Tkinter. It demonstrates how constraint-based problems can be modeled computationally and solved efficiently through recursive backtracking.
 
-This project is a simple and effective Sudoku Solver and Validator implemented in Python. It performs two main tasks:
 
-1. Validates whether a given Sudoku board follows the rules.
-2. Solves the Sudoku puzzle using a backtracking algorithm.
 
-The implementation is lightweight, uses no external libraries, and demonstrates core problem-solving techniques such as recursion and constraint checking.
+## Objectives
+Design a reliable Sudoku validation system based on rule enforcement↳
+Implement a recursive backtracking algorithm for solving constraint-based problems↳
+Integrate algorithmic logic with a graphical interface for better usability
+Demonstrate the practical application of recursion and state-space exploration↳
 
----
+## Core Features
+Complete Sudoku validation (rows, columns, and subgrids)
+Recursive backtracking solver
+Interactive 9×9 graphical grid for user input
+Preloaded sample puzzle for testing and demonstration
+Clear/reset functionality for repeated use
+Input restriction to valid digits (1–9)
+Algorithmic Approach
+Validation Strategy (checkboard)
 
-## How It Works
+## The validation component ensures that the Sudoku grid strictly follows the fundamental rules:
 
-### 1. Board Validation (`checkboard`)
+Row Integrity: No repeated values within any row
+Column Integrity: No repeated values within any column
+Subgrid Integrity: Each 3×3 subgri
 
-The `checkboard` function ensures the Sudoku board is valid by checking three conditions:
+Empty cells, represented by ".", are ignored during validation, allowing partially filled boards to be checked without false conflicts.
 
-* Rows: Each row must contain unique digits (1–9).
-* Columns: Each column must contain unique digits.
-* 3×3 Subgrids: Each 3×3 box must also contain unique digits.
+## Solving Strategy (solve_sudoku)
 
-Empty cells are represented by `"."` and are ignored during validation.
+The solver uses a depth-first search (DFS) with backtracking, a standard approach for constraint satisfaction problems.
 
----
+## Workflow:
 
-### 2. Sudoku Solver (`solver`)
+Traverse the grid to locate the next empty cell
+Attempt values from 1 to 9
+Validate the board after each assignment
+If valid, recursively proceed to the next cell
+If invalid, revert the assignment (backtrack)
+Continue until a complete valid solution is found
 
-The solver uses a backtracking approach:
+## This method explores the solution space systematically while eliminating invalid paths early.
 
-1. Traverse the board to find an empty cell (`"."`).
-2. Try placing numbers from 1 to 9.
-3. After placing a number:
+## Graphical User Interface
 
-   * Validate the board using `checkboard`.
-   * Recursively attempt to solve the rest of the board.
-4. If a number leads to a dead end:
+The GUI is built using Tkinter to provide an accessible interaction layer:
 
-   * Reset the cell (`"."`) and try the next number.
-5. Continue until:
+Structured 9×9 input grid
+Solve button to execute the algorithm
+Load Example button to autofill a sample puzzle
+Clear button to reset the board
+Input validation to ensure only digits 1–9 are accepted
 
-   * The board is completely filled (solution found), or
-   * All possibilities are exhausted (no solution).
 
----
 
-## Code Structure
-
-```
-├── checkboard(board)   # Validates rows, columns, and 3x3 grids
-├── solver(board)       # Solves the Sudoku using recursion
-└── main execution      # Defines board, validates, solves, prints result
-```
-
----
-
-## Example Board
-
-The following Sudoku puzzle is used as input:
-
-```
+## Structure
+checkboard(board) – Validates the Sudoku grid
+solve_sudoku(board) – Implements the backtracking solver↳
+get_board() – Retrieves input from the GUI↳
+display(board) – Updates the GUI with results↳
+GUI controls – Buttons and event handlers
+Main loop – Runs the application↳
+Sample Puzzle
 5 3 . | . 7 . | . . .
 6 . . | 1 9 5 | . . .
 . 9 8 | . . . | . 6 .
@@ -71,55 +74,27 @@ The following Sudoku puzzle is used as input:
 . 6 . | . . . | 2 8 .
 . . . | 4 1 9 | . . 5
 . . . | . 8 . | . 7 9
-```
+## Output
 
----
+After execution, the solver generates a completed valid Sudoku grid, displayed directly in the GUI:
 
-## Sample Output
-
-First, the program checks if the board is valid:
-
-```
-BOARD IS VALID
-```
-
-Then, it prints the solved Sudoku:
-
-```
-['5', '3', '4', '6', '7', '8', '9', '1', '2']
-['6', '7', '2', '1', '9', '5', '3', '4', '8']
-['1', '9', '8', '3', '4', '2', '5', '6', '7']
-['8', '5', '9', '7', '6', '1', '4', '2', '3']
-['4', '2', '6', '8', '5', '3', '7', '9', '1']
-['7', '1', '3', '9', '2', '4', '8', '5', '6']
-['9', '6', '1', '5', '3', '7', '2', '8', '4']
-['2', '8', '7', '4', '1', '9', '6', '3', '5']
-['3', '4', '5', '2', '8', '6', '1', '7', '9']
-```
-
----
-
+5 3 4 | 6 7 8 | 9 1 2
+6 7 2 | 1 9 5 | 3 4 8
+1 9 8 | 3 4 2 | 5 6 7
+...
 ## Limitations
-
-* No Graphical User Interface (GUI): The program runs entirely in the console.
-* Performance Constraints: Backtracking can be slow for highly complex or nearly empty boards.
-* No Optimization Heuristics: Techniques like constraint propagation or MRV are not implemented.
-* Static Input: The board is hardcoded; no file input or user input interface is provided.
-* Single Solution Assumption: The solver stops after finding the first valid solution.
-
----
-
-## Key Concepts Demonstrated
-
-* Recursion
-* Backtracking
-* Constraint validation
-* Grid-based problem solving
-
----
-
+Uses brute-force backtracking without heuristic optimization
+Performance may decrease for highly complex or sparse puzzles
+Returns only a single valid solution
+Limited feedback for invalid board states in the GUI
+Future Enhancements
+Implement heuristics such as Minimum Remaining Values (MRV) and forward checking
+Add real-time feedback for invalid inputs
+Introduce step-by-step solving visualization
+Support multiple solution detection and enumeration
+Improve UI design with enhanced styling and clearer grid segmentation
 ## Conclusion
 
-This project is a solid starting point for understanding how Sudoku solvers work. It demonstrates the use of recursion and systematic search to solve constraint-based problems in a clear and straightforward way.
+This project demonstrates how classical algorithmic techniques like recursion and backtracking can be applied to structured logical problems. By combining these methods with a graphical interface, the system not only solves Sudoku puzzles but also provides an accessible and interactive platform for users.
 
 ---
